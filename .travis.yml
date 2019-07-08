@@ -1,8 +1,8 @@
 language: python
 python:
-    - "3.7"
+  - "2.7"
+cache: pip
 install:
-    - pip install geocoder
-    - pip install .
+  - pip install geocoder
 script:
-    - python find_store_test.py
+  - python find_store_test.py
