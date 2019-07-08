@@ -1,52 +1,86 @@
-# Coding challenge
+## Overview
+StoreNearMe finds the nearest store to a location given by the user, using the address and the zip code. This app is built using Python and the GeoCoder library's open street map API. 
 
-In this repo there is store-locations.csv
+The application uses the CSV dict reader to read the file and allows Python to access it.  
 
-This is a tabular dataset of the locations of every store of a major national retail chain.
+The GeoCoder library takes the address or zip code given on the command line and identifies its latitude and longitude. The application takes these coordinates, compares it with the coordinates of the stores in the CSV file.
 
-# Deliverables
+It then uses the Haversine formula to calculate the distance to the nearest store. The Haversine formula uses trignometry and the radius of the earth's circumferance to find the distance. This is considered to be the best way to to find the distance between two geographical points, though there are other options like the Manhattan distance. 
 
-Please download the file (rather than forking this repo), do the exercise, and then upload to your own repo.
+The application prints out the nearest store, its location, address and zipcode on the command line. It also prints out the distance to the store from the location given,  in miles or, if the user prefers it, in kilometers. 
 
-Write a command-line application that uses the data to conform to the following specification (note that this specification conforms to http://docopt.org/)
+This application was tested at all points unit unittests. Fake data was used to check whether the nearest store was being returned in the tests, while actual data was used on the command line to check the application's efficacy. Some edge cases like invalid addresses have been accounted for by asking the program to raise exceptions and seek valid addresses.
 
+All external libraries used including GeoCoder were installed using pipenv install. Argparse was used to speak with the command line, while sys and math were directly imported into the file for the various calculations done in the program. JSon was imported and the data can also be read as json on the command line. 
+
+
+## Example Usage
+* Print usage information
 ```
-Find Store
-  find_store will locate the nearest store (as the vrow flies) from
-  store-locations.csv, print the matching store address, as well as
-  the distance to that store.
-
+$ ./find_store.py
 Usage:
-  find_store --address="<address>"
-  find_store --address="<address>" [--units=(mi|km)] [--output=text|json]
-  find_store --zip=<zip>
-  find_store --zip=<zip> [--units=(mi|km)] [--output=text|json]
+usage: find_store.py [-h] [--address ADDRESS] [--units UNITS] [--zip ZIPCODE]
+                     [--output OUTPUT_FORMAT]
 
-Options:
-  --zip=<zip>            Find nearest store to this zip code. If there are multiple best-matches, return the first.
-  --address="<address>"  Find nearest store to this address. If there are multiple best-matches, return the first.
-  --units=(mi|km)        Display units in miles or kilometers [default: mi]
-  --output=(text|json)   Output in human-readable text, or in JSON (e.g. machine-readable) [default: text]
+optional arguments:
+  -h, --help            show this help message and exit
+  --address ADDRESS     type the address
+  --units UNITS         type the units (mi|km)
+  --zip ZIPCODE         type zip code
+  --output OUTPUT_FORMAT type the output format (text|json)
 
-Example
-  find_store --address="1770 Union St, San Francisco, CA 94123"
-  find_store --zip=94115 --units=km
+```
+*  Find nearest store by address
+```
+$ ./find_store.py  --address="Market St, Durham, NC"
+
+  Store Name: Durham
+  Store Location: SWC Shannon Rd & US Hwy 15-501
+  Address: 4037 Durham Chapel Hill Blvd
+  City: Durham
+  State: NC
+  Zip Code: 27707-2516
+  Distance: 3.795293160416604 miles
+```
+* Find nearest store by zipcode
+```
+$ ./find_store.py  --zip="27612"
+
+  Store Name: Raleigh Hwy 70
+  Store Location: SEC US 70 & Lynn Rd
+  Address: 4841 Grove Barton Rd
+  City: Raleigh
+  State: NC
+  Zip Code: 27613-1900
+  Distance: 2.4922625582760545 miles.
 ```
 
-Additionally:
+* Get the output in json
+```
+$ ./find_store.py  --zip=27612 --output=json
+{"Store Name": "Raleigh Hwy 70", "Store Location": "SEC US 70 & Lynn Rd", "Address": "4841 Grove Barton Rd", "City": "Raleigh", "State": "NC", "Zip Code": "27613-1900", "Latitude": "35.8705975", "Longitude": "-78.7201235", "County": "Wake County", "Distance": 2.4922625582760545, "Units": "miles"}
 
-- Please write up a paragraph or two about how your solution works, any assumptions or caveats, and put it in a readme file.
-- Your solution should be well-tested in the testing framework of your choice. Commit the test suite to your repo.
-- The output format is not rigidly specified. Use your judgement for both the text and json formats.
+```
+* Get the distance in kilometers
+```
+$ ./find_store.py  --zip=27612  --units=km
 
-Send me a github link to the final project.
+  Store Name: Raleigh Hwy 70
+  Store Location: SEC US 70 & Lynn Rd
+  Address: 4841 Grove Barton Rd
+  City: Raleigh
+  State: NC
+  Zip Code: 27613-1900
+  Distance: 4.010907794586219 km.
+```
 
-# Notes
-
-Feel free to do this in whatever language you would like, and focus on the problem itself (rather than framework/scaffolding). Please make sure it's reasonably easy to run your code and there are clear instructions for doing so.
-
-You will need to use an external geocoding service. However please implement the distance calculation in your own code. To the extent you need any algorithms, I'm not expecting you to invent anything from scratch, so use Google & external libraries judiciously, and cite/document appropriately.
-
-You can add polish or an extra features if you'd like, but remember that software is about tradeoffs and *by far the most important thing is delivering working, practical software that solves the problem of finding the closest store location*. The goal is not to take up a bunch of your time, but see you solve a problem that looks very much like the type of work we do all the time.
-
-There are a ton of different ways to skin this cat -- be smart, be practical, thanks, and good luck!
+### Installation and Testing
+```
+$ pipenv install
+$ python find_store_test.py
+....
+```
+ 
+### Resources
+* [geocoder](https://github.com/DenisCarriere/geocoder)
+* [haversine formula for distances](https://en.wikipedia.org/wiki/Haversine_formula)
