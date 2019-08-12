@@ -70,8 +70,7 @@ def format_store_text(store, distance, units):
   City: {store['City']}
   State: {store['State']}
   Zip Code: {store['Zip Code']}
-  Distance: {distance} {units}.
-  """
+  Distance: {distance} {units}."""
 
 
 def format_store_json(store, distance, units):
