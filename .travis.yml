@@ -5,4 +5,4 @@ cache: pip
 install:
   - pip install geocoder
 script:
-  - python -m test -v test_findstore
+  - python tests.py
